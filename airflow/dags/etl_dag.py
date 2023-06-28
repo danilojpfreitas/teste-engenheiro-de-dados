@@ -2,7 +2,6 @@ from datetime import datetime,date, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
-from minio import Minio
 from pyspark.sql import SparkSession
 from pyspark.sql.types import DoubleType, IntegerType 
 from pyspark.sql import functions as f
@@ -21,10 +20,23 @@ dag = DAG('etl_data',
 
 findspark.init()
 
-spark = SparkSession.builder.master('local[*]')
+spark = SparkSession \
+        .builder \
+        .appName('PySpark MySQL Connection') \
+        .master('local[*]') \
+        .config("spark.jars", "/opt/airflow/jars/mysql-connector-j-8.0.33.jar") \
+        .getOrCreate()
 
-pathRow = "/workspace/teste-engenheiro-de-dados/dados/row/DADOS/MICRODADOS_ENEM_2020.csv"
-pathParquetProcessing = "/workspace/teste-engenheiro-de-dados/dados/processing"
+#MySql
+dbOptions = {
+    "driver" : "com.mysql.cj.jdbc.Driver",
+    "url" : "jdbc:mysql://172.18.0.2:3306",
+    "user" : "mesha",
+    "password" : "mesha"
+}
+
+pathRow = "/opt/airflow/dados/raw/DADOS/MICRODADOS_ENEM_2020.csv"
+pathParquetProcessing = "/opt/airflow/dados/processing"
 
 
 def extracao_dados():
@@ -33,6 +45,8 @@ def extracao_dados():
 
     enem = spark.read.csv(pathRow, sep=";", header=True)
 
+    enem.printSchema()
+    
     #Seleção das Colunas
 
     enemSelecao = enem.select("NU_INSCRICAO", "TP_SEXO", "TP_COR_RACA", "CO_MUNICIPIO_ESC", "NO_MUNICIPIO_ESC", "SG_UF_ESC", "TP_PRESENCA_CN", "TP_PRESENCA_CH", "TP_PRESENCA_LC", "TP_PRESENCA_MT", "NU_NOTA_CN", "NU_NOTA_CH", "NU_NOTA_LC", "NU_NOTA_MT", "NU_NOTA_REDACAO", "TP_ST_CONCLUSAO")
@@ -96,14 +110,12 @@ def extracao_dados():
 
     #Transformação para o formato Parquet - Processing Zone
 
-    pathParquet = "/workspace/teste-engenheiro-de-dados/dados/processing"
-
     enemSelecaoTipos.write.parquet(
-    pathParquet,
+    pathParquetProcessing,
     mode = "overwrite"
     )
 
- def curated_zone_pergunta_01:
+def curated_zone_pergunta_01():
 
     # 1 - Qual a escola com a maior média de notas?
 
@@ -142,7 +154,23 @@ def extracao_dados():
         ORDER BY MediaNotas DESC
         """)
 
-        escolaMaiorMedia.limit(10).show()
+    escolaMaiorMedia.limit(10).show()
+
+    # escolaMaiorMedia.write\
+    #     .format("jdbc")\
+    #     .option(**dbOptions)\
+    #     .option("dbtable", "escolaMaiorMedia")\
+    #     .save()
+
+    escolaMaiorMedia.write\
+        .format("jdbc")\
+        .option("driver","com.mysql.cj.jdbc.Driver")\
+        .option("url", "jdbc:mysql://172.19.0.2:3306/mesha")\
+        .option("dbtable", "mesha")\
+        .option("user", "mesha")\
+        .option("password", "mesha")\
+        .save()
+
 
 extracao_dados = PythonOperator(
   task_id='extracao_dados',
