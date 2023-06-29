@@ -29,6 +29,7 @@ install() {
   
     echo "Instalando Raw dentro do Container"
     docker container exec -it airflow bash
+    apt-get install wget
     mkdir dados
     cd dados
     mkdir raw
@@ -52,6 +53,7 @@ data() {
     mkdir dados
     cd dados
     mkdir raw
+    mkdir processing
     cd raw
     wget --no-check-certificate https://download.inep.gov.br/microdados/microdados_enem_2020.zip
     unzip microdados_enem_2020.zip
@@ -59,14 +61,14 @@ data() {
 
 }
 
-conexaoContainer() {
+conexaocontainer() {
 
     #Para conectar os containeres é necessario criar uma bridge de rede
-    #1) Criar um network para conexão
-    docker network connect db airflow
-    #2) Criar uma conexão da network para cada container
+    echo "1) Criar um network para conexão"
+    docker network create my-net
+    echo "2) Criar uma conexão da network para cada container"
     docker network connect my-net db
     docker network connect my-net airflow
-    #3) Inspesionar o IPAddress do network my-net de db e implementar na DAG
+    echo "3) Inspecionar o IPAddress do network my-net de db e implementar na DAG"
 
 }
