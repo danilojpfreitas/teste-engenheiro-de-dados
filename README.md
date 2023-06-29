@@ -15,11 +15,11 @@ Desejáveis
 - PySpark :white_check_mark:
 - Esquema Estrela :white_check_mark:
 
-### Base de Dados:
+### Base de Dados
 
 - A base de dados selecionada para esse desafio técnico está disponível em: [Base de Dados](https://download.inep.gov.br/microdados/microdados_enem_2020.zip).
 
-- Após o download e da descompactação o arquivo csv utilizado está localizado em `microdados_enem_2020/DADOS/MICRODADOS_ENEM_2020.csv`.
+- Após o download e da descompactação o arquivo csv utilizado está localizado em: `microdados_enem_2020/DADOS/MICRODADOS_ENEM_2020.csv`.
 
 ### Perguntas respondidas:
 
@@ -39,16 +39,16 @@ Desejáveis
 Visando atender aos critérios deste projeto e da utilização das principais features utilizadas no mercado, as seguintes ferramentas foram utilizadas:
 
 - Airflow: Processo ETL totalmente orquestrado e de fácil replicação;
-- PySpark: Uma das principais bibliotecas de Big Date atual;
+- PySpark: Uma das principais bibliotecas de Big Date;
 - Parquet: Formato de arquivo mais performatico;
-- MySQL: Requisito do projeto é um dos DBs mais utilizados no mercado;
+- MySQL: Requisito do projeto, é um dos DBs mais utilizados no mercado;
 - Jupyter: Notebook de desenvolvimento do projeto.
 
-### Step-by-Step
+### Step by Step
 
-## 1) Desenvolvimento do código PySpark
+#### 1) Desenvolvimento do código PySpark
 
-O primeiro passo do projeto foi o desenvolvimento do código PySpark. Para isso, após o download e a descompactação do arquivo foi criado o diretório dados e dentro dele o diretório raw. Dentro do diretório row foi disponibilizado o arquivo csv: `MICRODADOS_ENEM_2020.csv`.
+O primeiro passo do projeto foi o desenvolvimento do código PySpark. Para isso, após o download e a descompactação do arquivo foi criado o diretório `dados` e dentro dele o diretório `raw`. Dentro do diretório row foi disponibilizado o arquivo csv: `MICRODADOS_ENEM_2020.csv`.
 
 Um segundo diretório foi criado de nome notebook e dentro dele o arquivo `desenvolvimento.ipynb`. O seu acesso foi por meio do Jupyter, em:
 
