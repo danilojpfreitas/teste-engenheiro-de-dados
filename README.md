@@ -263,18 +263,40 @@ Agora já é possível executar e observar o andamento das etapas, basta ATIVAR 
 
 Após a finalização do processo ETL já é possível visualizar as tabelas no MySQL:
 
+![vizualizacaoosql](img/vizualizacaoosql.png)
 
-
-
-
+Agora já é possível vizualizar as tabelas criadas no DataBase.
 
 ### Perguntas respondidas:
 
 1. Qual a escola com a maior média de notas? :white_check_mark:
+
+![01](img/01.png)
+
 2. Qual o aluno com a maior média de notas e o valor dessa média? :white_check_mark:
+
+![02](img/02.png)
+
 3. Qual a média geral? :white_check_mark:
+
+![03](img/03.png)
+
 4. Qual o % de Ausentes? :white_check_mark:
+
+![04](img/04.png)
+
 5. Qual o número total de Inscritos? :white_check_mark:
+
+![05](img/05.png)
+
 6. Qual a média por disciplina? :white_check_mark:
+
+![06](img/06.png)
+
 7. Qual a média por Sexo? :white_check_mark:
+
+![07](img/07.png)
+
 8. Qual a média por Etnia? :white_check_mark:
+
+![08](img/08.png)

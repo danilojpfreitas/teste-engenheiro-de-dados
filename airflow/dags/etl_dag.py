@@ -151,6 +151,8 @@ def pergunta_01_curated_mysql():
 
     escolaMaiorMedia = escolaMaiorMedia.limit(1)
 
+    escolaMaiorMedia.show()
+
     escolaMaiorMedia.write\
     .format("jdbc")\
     .option("driver",f"{driver}")\
@@ -225,6 +227,8 @@ def pergunta_02_curated_mysql():
         """)
 
     alunoMaiorNota = alunoMaiorNota.select("NumInscricao", "Sexo", "Etnia", "SituacaoConclusao", "MediaNotas").limit(1)
+
+    alunoMaiorNota.show()
 
     alunoMaiorNota.write\
     .format("jdbc")\
