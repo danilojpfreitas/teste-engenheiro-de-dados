@@ -6,7 +6,7 @@
 
 </div>
 
-Critérios avaliadas:
+Critérios avaliados:
 - Docker :white_check_mark:
 - SQL :white_check_mark:
 - Python :white_check_mark:
@@ -23,7 +23,7 @@ Desejáveis
 
 - A base de dados selecionada para esse desafio técnico está disponível em: [Base de Dados](https://download.inep.gov.br/microdados/microdados_enem_2020.zip).
 
-- Após o download e de descompactar, o arquivo csv utilizado está localizado em: `microdados_enem_2020/DADOS/MICRODADOS_ENEM_2020.csv`.
+- Após a realização do download e de descompactar, o arquivo csv utilizado está localizado em: `microdados_enem_2020/DADOS/MICRODADOS_ENEM_2020.csv`.
 
 ### Arquitetura e Features escolhidas para o projeto
 
@@ -49,7 +49,7 @@ Visando atender aos critérios estabelecidos para este projeto e da utilização
 O primeiro passo do projeto foi o desenvolvimento do código PySpark. Para isso, após o download e a descompactação do arquivo foi criado o diretório `dados` e dentro dele o diretório `raw`. Dentro do diretório row foi disponibilizado o arquivo csv: `MICRODADOS_ENEM_2020.csv`.
 
 #### Acesso ao Notebook Jupyter
-Um segundo diretório foi criado `notebook` e dentro dele o arquivo `desenvolvimento.ipynb`. O seu acesso foi por meio do Jupyter, na qual foi instalado localmente o Acaconda ([Documentação - Link](https://docs.anaconda.com/free/anaconda/install/linux/)).
+Um segundo diretório foi criado `notebook` e dentro dele o arquivo `desenvolvimento.ipynb`. O seu acesso é por meio do Notebook Jupyter, na qual foi instalado localmente o Acaconda ([Documentação - Link](https://docs.anaconda.com/free/anaconda/install/linux/)).
 
 Para acesso ao Notebook Jupyter o seguinte comando foi executado:
 
@@ -58,7 +58,7 @@ Para acesso ao Notebook Jupyter o seguinte comando foi executado:
 O acesso local ao notebook ocorreu pelo `https://localhost:8888`.
 
 #### Desenvolviemnto do código PySpark
-Dentro do notebook `desenvolvimento.ipynb` foi desenvolvido todo o código que posteriormente irá ser apresentado durante a construção da DAG Airflow. O notebook desenvolvido para este projeto está disponível em: `notebook/desenvolvimento.ipynb`
+Dentro do notebook `desenvolvimento.ipynb` foi desenvolvido todo o código que posteriormente irá ser apresentado durante a construção da DAG Airflow. O notebook desenvolvido para este projeto está disponível em: `notebook/desenvolvimento.ipynb`.
 
 ![jupyter1](img/jupyter1.png)
 
@@ -69,14 +69,14 @@ Dentro do notebook `desenvolvimento.ipynb` foi desenvolvido todo o código que p
 Para obter os dados e executá-los no notebook Jupyter utilizado é necessário baixar o CSV. O código bash está disponível em `setup.sh` -> `data`. Na qual é composto pelo seguinte código:
 
 ``` 
-    mkdir dados
-    cd dados
-    mkdir raw
-    mkdir processing
-    cd raw
-    wget --no-check-certificate https://download.inep.gov.br/microdados/microdados_enem_2020.zip
-    unzip microdados_enem_2020.zip
-    mv DADOS/MICRODADOS_ENEM_2020.csv ..
+mkdir dados
+cd dados
+mkdir raw
+mkdir processing
+cd raw
+wget --no-check-certificate https://download.inep.gov.br/microdados/microdados_enem_2020.zip
+unzip microdados_enem_2020.zip
+mv DADOS/MICRODADOS_ENEM_2020.csv ..
 ```
 
 
@@ -116,7 +116,7 @@ Primeiramente o comando abaixo deve ser executado para a instalação do contain
 ```    
 docker run -d -p 8080:8080 -v "$PWD/airflow/dags:/opt/airflow/dags/" --entrypoint=/bin/bash --name airflow apache/airflow:2.1.1-python3.8 -c '(airflow db init && airflow users create --username admin --password admin --firstname Danilo --lastname Freitas --role Admin --email admin@example.org); airflow webserver & airflow scheduler'
 ```
-Nele está definido a porta `8080` e o username/password, definido para este projeto como `admin`.  
+Nele está definido a porta `8080` e o username/password, definidos como `admin`.  
 
 ##### Instalação de dependências dentro do container Airflow
 
@@ -130,15 +130,14 @@ O seguinte processo deve ser executado para a instalação das dependências nec
     apt-get install -y ant && \
     apt-get clean;
     ```
-Para a conexão entre a DAG do airflow com o MySQL é necessária baixar o arquivo conector `mysql-connector-j-8.0.33.jar` dentro do container, seguir as etapas:
+Para a conexão entre a DAG do airflow com o MySQL é necessário baixar o arquivo conector `mysql-connector-j-8.0.33.jar` dentro do container, seguir as etapas:
 
 Ainda dentro do bash root do container:
 
 3) ```
-    apt-get install wget`
+    apt-get install wget
     apt-get install unzip
     ```
-
 
 4) ```
     mkdir jars
@@ -165,18 +164,20 @@ Baixando o arquivo CSV dentro do container (ainda no bash do container):
     unzip microdados_enem_2020.zip
     ```
 
-9) Após a finalização ambos os bash dos container pode ser fechado
+9) Após a finalização de ambos os bash dos containers o terminal pode ser fechado.
 
 #### Conexão entre os containers Airflow/MySQL
 
-A última etapa de configuração dos containers consiste na conexão entre ambos, para isso deve ser executada as seguintes etapas no terminal:
+A última etapa de configuração dos containers consiste na conexão entre ambos os containers, para isso deve ser executada as seguintes etapas no terminal:
 
-1) Criação de um network para conexão: `docker network create my-net`
+1) Criação de um network para conexão: 
+- `docker network create my-net`
+
 2) Criar uma conexão da network para cada container:
 - `docker network connect my-net db`
 - `docker network connect my-net airflow`
 
-3) Inspecionando o container db para a obtenção do IPAddress do network my-net
+3) Inspecionando o container db para a obtenção do IPAddress do network my-net:
 - `docker container inspect db`
 
 ![inspectdb](img/inspectdb.png)
@@ -185,7 +186,7 @@ Por exemplo, neste caso o IPAddress do network entre o container db e airflow é
 
 #### Definição dos parâmetros de conexão entre os containers Airflow/MySQL
 
-Agora basta definir os parâmetros para conexão no diretório `airflow/dags/mysqlairflow.py`. Por exemplo, neste caso em url é definido como 172.19.0.2/mesha que é o IPAddress é o nome do database e o user/password como `mesha` (definidos no `docker-compose.yml`).
+Agora basta definir os parâmetros para conexão no diretório `airflow/dags/mysqlairflow.py`. Por exemplo, neste caso em url é definido como 172.19.0.2/mesha que é o IPAddress com o nome do database, já o user/password são definidos como `mesha` (definidos no `docker-compose.yml`).
 
 ### 3) Execução do ambiente Airflow
 
@@ -263,7 +264,7 @@ Ao acessor o Airflow é possível observar de forma visual em `Graph View` o pro
 
 ![airflowview](img/airflowview.png)
 
-Agora já é possível executar e observar o andamento das etapas, basta ATIVAR a DAG e adicionar um `trigger DAG`, após a finalização todas as tabelas estarão disponível no MySQL do projeto.
+Agora já é possível executar e observar o andamento das etapas, basta ativar a DAG e adicionar um `trigger DAG`, após a finalização todas as tabelas estarão disponível no MySQL do projeto.
 
 ![finalizaçãoairflow](img/finalizaçãoairflow.png)
 
@@ -273,7 +274,7 @@ Após a finalização do processo ETL já é possível visualizar as tabelas no 
 
 ![vizualizacaoosql](img/vizualizacaoosql.png)
 
-Agora já é possível vizualizar as tabelas criadas no DataBase.
+Agora já é possível vizualizar todas as tabelas criadas no DataBase.
 
 ### Perguntas respondidas:
 
