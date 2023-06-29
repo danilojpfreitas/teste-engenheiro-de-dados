@@ -1,3 +1,4 @@
+from mysqlairflow import url, driver, user, password
 from datetime import datetime,date, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
@@ -26,12 +27,6 @@ spark = SparkSession \
         .master('local[*]') \
         .config("spark.jars", "/opt/airflow/jars/mysql-connector-j-8.0.33.jar") \
         .getOrCreate()
-
-#MySql
-url = "172.19.0.2:3306/mesha" #000.00.0.0:0000/database
-driver = "com.mysql.cj.jdbc.Driver"
-user = "mesha"
-password = "mesha"
 
 pathRow = "/opt/airflow/dados/raw/DADOS/MICRODADOS_ENEM_2020.csv"
 pathParquetProcessing = "/opt/airflow/dados/processing"
@@ -113,15 +108,15 @@ def extracao_dados():
     mode = "overwrite"
     )
 
-# Criação da View para as próximas DAGs
-enemParquet = spark.read.parquet(
-pathParquetProcessing
-)
-
-enemParquet.createOrReplaceTempView("enemView")
-
 
 def pergunta_01_curated_mysql():
+
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
 
     # 1 - Qual a escola com a maior média de notas?
 
@@ -156,6 +151,8 @@ def pergunta_01_curated_mysql():
 
     escolaMaiorMedia = escolaMaiorMedia.limit(1)
 
+    escolaMaiorMedia.show()
+
     escolaMaiorMedia.write\
     .format("jdbc")\
     .option("driver",f"{driver}")\
@@ -167,6 +164,13 @@ def pergunta_01_curated_mysql():
 
 
 def pergunta_02_curated_mysql():
+
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
 
     # 2 - Qual o aluno com a maior média de notas e o valor dessa média?
 
@@ -224,6 +228,8 @@ def pergunta_02_curated_mysql():
 
     alunoMaiorNota = alunoMaiorNota.select("NumInscricao", "Sexo", "Etnia", "SituacaoConclusao", "MediaNotas").limit(1)
 
+    alunoMaiorNota.show()
+
     alunoMaiorNota.write\
     .format("jdbc")\
     .option("driver",f"{driver}")\
@@ -235,6 +241,13 @@ def pergunta_02_curated_mysql():
 
 
 def pergunta_03_curated_mysql():
+
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
 
     # 3 - Qual a média geral?
 
@@ -272,6 +285,13 @@ def pergunta_03_curated_mysql():
 
 
 def pergunta_04_curated_mysql():
+
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
 
     # 4 - Qual o % de Ausentes?
 
@@ -324,6 +344,13 @@ def pergunta_04_curated_mysql():
 
 def pergunta_05_curated_mysql():
 
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
+
     # 5 - Qual o número total de Inscritos?
 
     totalInscritos = spark.sql("""
@@ -346,6 +373,13 @@ def pergunta_05_curated_mysql():
 
 
 def pergunta_06_curated_mysql():
+
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
 
     # 6 - Qual a média por disciplina?
 
@@ -408,6 +442,13 @@ def pergunta_06_curated_mysql():
 
 def pergunta_07_curated_mysql():
 
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
+
     # 7 - Qual a média por Sexo?
 
     mediaSexo = spark.sql("""
@@ -442,6 +483,13 @@ def pergunta_07_curated_mysql():
 
 
 def pergunta_08_curated_mysql():
+
+    # Criação da View para as próximas DAGs
+    enemParquet = spark.read.parquet(
+    pathParquetProcessing
+    )
+
+    enemParquet.createOrReplaceTempView("enemView")
 
     # 8 - Qual a média por Etnia?
 
